@@ -45,7 +45,6 @@ public class Parsing {
         printAllParams();
     }
 
-
     private static void parseLine(String line, int position) {
         String regex = "(\\s*)=(\\s*)([0-9.]+)";
 
