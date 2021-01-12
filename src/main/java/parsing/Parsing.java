@@ -14,8 +14,6 @@ public class Parsing {
     static String[] allParams = new String[57];
 
     public static void main(String[] args) {
-        //String path = "C:\\Работа\\Export\\Записка расчётная\\Тестирование\\СД\\ROPCR008";
-        //getDataFromFile(path);
         printPath();
     }
 
@@ -30,7 +28,7 @@ public class Parsing {
     }
 
     private static void getDataFromFile(Path path) {
-        System.out.println( "\n\n" + path);
+        System.out.println("\n\n" + path);
         try (BufferedReader reader = new BufferedReader(new FileReader(String.valueOf(path)))) {
             String line;
             int i = 1;
@@ -55,7 +53,7 @@ public class Parsing {
         Matcher matcher = pattern.matcher(line);
 
         while (matcher.find()) {
-            allParams[position]= ( matcher.group(3));
+            allParams[position] = (matcher.group(3));
             position += 14;
         }
 
@@ -66,6 +64,4 @@ public class Parsing {
             System.out.println(allParam);
         }
     }
-
-
 }
