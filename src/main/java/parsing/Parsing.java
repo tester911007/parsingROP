@@ -1,5 +1,7 @@
 package parsing;
 
+import connection.ConnectionDB;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.util.stream.Stream;
 
 public class Parsing {
     static String[] allParams = new String[57];
+    static ConnectionDB insertIntoDB = new ConnectionDB();
 
     public static void main(String[] args) {
         printPath();
@@ -42,7 +45,7 @@ public class Parsing {
         }
 
         allParams[0] = "1";
-        printAllParams();
+        insertIntoDB.executeSQL(allParams);
     }
 
     private static void parseLine(String line, int position) {
@@ -54,13 +57,6 @@ public class Parsing {
         while (matcher.find()) {
             allParams[position] = (matcher.group(3));
             position += 14;
-        }
-
-    }
-
-    private static void printAllParams() {
-        for (String allParam : allParams) {
-            System.out.println(allParam);
         }
     }
 }
