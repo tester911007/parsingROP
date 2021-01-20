@@ -14,55 +14,28 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class Parsing {
-    private static String initialPath = "C:\\Работа\\Export\\Записка расчётная\\Тестирование\\СД";
+    private static final String INITIAL_PATH = "C:\\Работа\\Export\\Записка расчётная\\Тестирование\\СД\\";
     private static ArrayList<Path> allProvenPaths = new ArrayList<>();
     private static String[] allParams = new String[57];
     private static ConnectionDB insertIntoDB = new ConnectionDB();
 
-    public static void main(String[] args) throws IOException {
-//        File initialPath = new File("S:\\a.senkevich\\");
-//        getFolders(initialPath);
-        printPath();
+    public static void main(String[] args) {
+        sortFilesByDate();
     }
 
-    /*
-        public static void getFolders(File folder) throws IOException {
-            File[] folderEntries = folder.listFiles();
-            for (File entry : folderEntries) {
-                if (entry.isDirectory()) {
-                    findLastModifiedFile(entry.getAbsolutePath());
-                }
-            }
-        }
-
-        public static void findLastModifiedFile(String pathFolder) throws IOException {
-            Path dir = Paths.get(pathFolder);
-            if (Files.isDirectory(dir)) {
-                Optional<Path> opPath = Files.list(dir)
-                        .filter(p -> !Files.isDirectory(p))
-                        .filter(p -> p.getFileName().toString().startsWith("ROPC"))
-                        .sorted((p1, p2) -> Long.valueOf(p2.toFile().lastModified())
-                                .compareTo(p1.toFile().lastModified()))
-                        .findFirst();
-
-                if (opPath.isPresent()) {
-                    getDataFromFile(opPath.get());
-                }
-            }
-        }
-    */
-    private static void printPath() {
-        try (Stream<Path> paths = Files.walk(Paths.get(initialPath))) {
+    private static void sortFilesByDate() {
+        try (Stream<Path> paths = Files.walk(Paths.get(INITIAL_PATH))) {
             paths
                     .filter(p -> p.getFileName().toString().startsWith("ROPC"))
                     .sorted((p1, p2) -> Long.compare(p2.toFile().lastModified(), p1.toFile().lastModified()))
-                    .forEach(Parsing::checkedPath);
+                    .forEach(Parsing::checkPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void checkedPath(Path path) {
+    //Проверка наличия родительского пути в списке уже проверенных
+    private static void checkPath(Path path) {
         if (!allProvenPaths.contains(path.getParent())) {
             allProvenPaths.add(path.getParent());
             getDataFromFile(path);
@@ -79,13 +52,14 @@ public class Parsing {
                     parseLine(line, i - 4);
                 i++;
             }
+            allParams[0] = "1";
+            insertIntoDB.executeSQL(allParams);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        allParams[0] = "1";
-        insertIntoDB.executeSQL(allParams);
     }
 
+    //Построчная обработка
     private static void parseLine(String line, int position) {
         String regex = "(\\s*)=(\\s*)([0-9.]+)";
         Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);

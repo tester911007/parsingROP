@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class ConnectionDB {
     private static final String INSERT_INPUT = "INSERT INTO [dbo].[input] " +
-            "([a1],[a2],[a3],[a4],[a5],[a6],[a7],[a8],[a9],[a10] " +
+            "([a01],[a02],[a03],[a04],[a05],[a06],[a07],[a08],[a09],[a10] " +
             ",[a11],[a12],[a13],[a14],[a15],[a16],[a17],[a18],[a19] " +
             ",[a20],[a21],[a22],[a23],[a24],[a25],[a26],[a27],[a28],[a29] " +
             ",[a30],[a31],[a32],[a33],[a34],[a35],[a36],[a37],[a38],[a39] " +
@@ -19,7 +19,7 @@ public class ConnectionDB {
             "       ,?,?,?,?,?,?,?,?,?,? " +
             "       ,?,?,?,?,?,?,?,?,?,?);";
 
-    private   Connection getConnection() throws SQLException {
+    private Connection getConnection() throws SQLException {
         String connectionUrl = Config.getProperty(Config.DB_URL) +
                 Config.getProperty(Config.DB_DATABASE) +
                 Config.getProperty(Config.DB_LOGIN) +
@@ -27,9 +27,9 @@ public class ConnectionDB {
         return DriverManager.getConnection(connectionUrl);
     }
 
-    public   void executeSQL(String[] allParams) {
+    public void executeSQL(String[] allParams) {
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT_INPUT, new String[] {"id"})) {
+             PreparedStatement statement = connection.prepareStatement(INSERT_INPUT, new String[]{"id"})) {
 
             for (int i = 0; i < allParams.length; i++) {
                 statement.setString(i + 1, allParams[i]);
@@ -39,7 +39,7 @@ public class ConnectionDB {
             statement.executeUpdate();
 
             ResultSet resultSet = statement.getGeneratedKeys();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 System.out.println(resultSet.getLong(1));
             }
             resultSet.close();
