@@ -42,6 +42,7 @@ public class Parsing {
         }
     }
 
+    //Получение набора строк из файла
     private static void getDataFromFile(Path path) {
         System.out.println(path);
         try (BufferedReader reader = new BufferedReader(new FileReader(String.valueOf(path)))) {
